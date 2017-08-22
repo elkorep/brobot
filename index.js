@@ -18,16 +18,15 @@ rtm.on(CLIENT_EVENTS.RTM.AUTHENTICATED, function(rtmStartData) {
 
 rtm.on(RTM_EVENTS.MESSAGE, function handleRtmMessage(message) {
   var lcMessage = message.text.toLowerCase();
-
-  if (lcMessage.contains('bro') || lcMessage.contains('brobot')) {
-    if(lcMessage.contains('ptal')) {
+  if (lcMessage.indexOf('bro') > -1 || lcMessage.indexOf('brobot') > -1) {
+    if(lcMessage.indexOf('ptal') > -1) {
       ptal(message);
     }
-    else if (lcMessage.contains('reviews')) {
+    else if (lcMessage.indexOf('reviews') > -1) {
       reviews();
     }
 
-    else if (lcMessage.contains('help')) {
+    else if (lcMessage.indexOf('help') > -1) {
       var help = fs.readFileSync('./help.txt').toString();
       rtm.sendMessage(help, channel);
     }
@@ -43,8 +42,8 @@ function ptal(message) {
   var text = '';
 
   splitMessage.forEach(function(word) {
-    if(word.contains('@')) reviewers.push(word);
-    else if(word.contains('https://github') && word.contains('pull')) pr = word;
+    if(word.indexOf('@') > -1) reviewers.push(word);
+    else if(word.indexOf('https://github') > -1 && word.indexOf('pull') > -1) pr = word;
   });
 
   if (pr !== '' && reviewers.length > 0) {
@@ -72,3 +71,5 @@ function reviews() {
     }
     return rtm.sendMessage('No Reviews Found');
 }
+
+rtm.start();

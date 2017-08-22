@@ -6,6 +6,7 @@ var fs = require('fs');
 var CLIENT_EVENTS = require('@slack/client').CLIENT_EVENTS;
 var RTM_CLIENT = require('@slack/client').RtmClient;
 var RTM_EVENTS = require('@slack/client').RTM_EVENTS;
+var config = require('./config.json');
 
 var botToken = config.botToken;
 var channel = config.slackchannel;
@@ -16,40 +17,14 @@ rtm.on(CLIENT_EVENTS.RTM.AUTHENTICATED, function(rtmStartData) {
 });
 
 rtm.on(RTM_EVENTS.MESSAGE, function handleRtmMessage(message) {
-  var splitMessage = message.text.split(' ');
   var lcMessage = message.text.toLowerCase();
-  var reviews = require('./reviews.json');
 
   if (lcMessage.contains('bro') || lcMessage.contains('brobot')) {
     if(lcMessage.contains('ptal')) {
-      var attachment = require('./attachment.json');
-      var reviewers = [];
-      var pr = '';
-      var text = '';
-      forEach(var word in splitMessage) {
-        if(word.contains('@')) reviewers.push(word);
-        else if(word.contains('https://github') && word.contains('pull')) pr = word;
-      }
-      if(pr !== '' && reviewers.length > 0) {
-          forEach(var reviewer in reviewers) {
-              text += reviewer + ' ';
-          }
-          text += pr;
-          attachment.text = text;
-          attachment.callback_id = pr;
-          reviews.attachments.push(attachment);
-
-          fs.writeFile('./reviews.json', reviews, function(err) {
-            if(err) {
-              return console.log(err);
-            }
-            console.log("reviews.json overwritten");
-          });
-      }
+      ptal(message);
     }
     else if (lcMessage.contains('reviews')) {
-      if(reviews.attachments.length > 0) rtm.sendMessage(reviews, channel);
-      else rtm.sendMessage('No Reviews Found')
+      reviews();
     }
 
     else if (lcMessage.contains('help')) {
@@ -58,3 +33,41 @@ rtm.on(RTM_EVENTS.MESSAGE, function handleRtmMessage(message) {
     }
   }
 });
+
+function ptal(message) {
+  var splitMessage = message.text.split(' ');
+  var reviews = require('./reviews.json');
+  var attachment = require('./attachment.json');
+  var reviewers = [];
+  var pr = '';
+  var text = '';
+
+  forEach(var word in splitMessage) {
+    if(word.contains('@')) reviewers.push(word);
+    else if(word.contains('https://github') && word.contains('pull')) pr = word;
+  }
+  if(pr !== '' && reviewers.length > 0) {
+    forEach(var reviewer in reviewers) {
+      text += reviewer + ' ';
+    }
+    text += pr;
+    attachment.text = text;
+    attachment.callback_id = pr;
+    reviews.attachments.push(attachment);
+
+    fs.writeFile('./reviews.json', reviews, function(err) {
+        if(err) {
+            return console.log(err);
+        }
+        console.log("reviews.json overwritten");
+    });
+  }
+}
+
+function reviews() {
+    var reviews = require('./reviews.json');
+    if(reviews.attachments.length > 0) {
+      return rtm.sendMessage(reviews, channel);
+    }
+    return rtm.sendMessage('No Reviews Found');
+}

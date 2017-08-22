@@ -1,4 +1,6 @@
 {
   "botToken":"",
-  "slackchannel":""
+  "slackchannel":"",
+  "webapitoken":"",
+  "brobotName":""
 }

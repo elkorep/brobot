@@ -42,24 +42,25 @@ function ptal(message) {
   var pr = '';
   var text = '';
 
-  forEach(var word in splitMessage) {
+  splitMessage.forEach(function(word) {
     if(word.contains('@')) reviewers.push(word);
     else if(word.contains('https://github') && word.contains('pull')) pr = word;
-  }
-  if(pr !== '' && reviewers.length > 0) {
-    forEach(var reviewer in reviewers) {
+  });
+
+  if (pr !== '' && reviewers.length > 0) {
+    reviewers.forEach(function(reviewer){
       text += reviewer + ' ';
-    }
+    });
     text += pr;
     attachment.text = text;
     attachment.callback_id = pr;
     reviews.attachments.push(attachment);
 
     fs.writeFile('./reviews.json', reviews, function(err) {
-        if(err) {
-            return console.log(err);
-        }
-        console.log("reviews.json overwritten");
+      if(err) {
+        return console.log(err);
+      }
+      console.log("reviews.json overwritten");
     });
   }
 }

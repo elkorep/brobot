@@ -1,0 +1,7 @@
+# dependencies
+/node_modules
+
+# config files
+config.json
+reviews.json
+attachment.json

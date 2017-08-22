@@ -1,0 +1,34 @@
+{
+  "name": "brobot",
+  "version": "0.0.1",
+  "description": "A bot for slack which assists development teams",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elkorep/brobot.git"
+  },
+  "keywords": [
+    "slack",
+    "bot",
+    "slackbot",
+    "bro",
+    "bot",
+    "brobot"
+  ],
+  "author": "Peter El-koreh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/elkorep/brobot/issues"
+  },
+  "homepage": "https://github.com/elkorep/brobot#readme",
+  "dependencies": {
+    "@slack/client": "^3.11.0"
+  },
+  "devDependencies": {
+    "eslint": "^4.5.0",
+    "eslint-config-loopback": "^9.0.2"
+  }
+}

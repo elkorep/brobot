@@ -56,18 +56,23 @@ function ptal(message) {
       text += reviewer + ' ';
     });
     text += pr;
-    reviews.attachments.forEach(function(attachment){
-      reviewExists = attachment.text.indexOf(pr) > -1;
+    reviews.attachments.forEach(function(att){
+      if(!reviewExists) reviewExists = att.text.indexOf(pr) > -1;
     });
 
     if(!reviewExists) {
       attachment.text = text;
-      reviews.attachments.push(attachment);
-      fs.writeFile('./reviews.json', JSON.stringify(reviews), function(err) {
-        if(err) {
-          return console.log(err);
-        }
-        console.log('reviews.json overwritten');
+      reviews.attachments.push(JSON.parse(JSON.stringify(attachment)));
+
+        fs.unlink('./reviews.json', function(err){
+        if (err && err.code !== 'ENOENT') throw err;
+        var options = { flag : 'w' };
+        fs.writeFile('./reviews.json', JSON.stringify(reviews), options, function(err) {
+          if(err) {
+            return console.log(err);
+          }
+          console.log('reviews.json overwritten');
+        });
       });
     }
   }

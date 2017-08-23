@@ -27,7 +27,6 @@ rtm.on(RTM_EVENTS.MESSAGE, function handleRtmMessage(message) {
         ptal(message);
       }
       else if (lcMessage.indexOf('reviews') > -1) {
-        console.log(message);
         reviews();
       }
       else if (lcMessage.indexOf('help') > -1) {

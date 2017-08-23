@@ -20,13 +20,14 @@ rtm.on(CLIENT_EVENTS.RTM.AUTHENTICATED, function(rtmStartData) {
 });
 
 rtm.on(RTM_EVENTS.MESSAGE, function handleRtmMessage(message) {
-  if(message.text){
+  if (message.text && message.subtype !== 'bot_message'){
     var lcMessage = message.text.toLowerCase();
     if (message.text.indexOf(brobotName) > -1 || lcMessage.indexOf('bro') > -1 || lcMessage.indexOf('brobot') > -1) {
-      if(lcMessage.indexOf('ptal') > -1) {
+      if (lcMessage.indexOf('ptal') > -1) {
         ptal(message);
       }
-      else if(lcMessage.indexOf('reviews') > -1) {
+      else if (lcMessage.indexOf('reviews') > -1) {
+        console.log(message);
         reviews();
       }
       else if (lcMessage.indexOf('help') > -1) {
@@ -47,8 +48,8 @@ function ptal(message) {
   var reviewExists = false;
 
   splitMessage.forEach(function(word) {
-    if(word.indexOf('@') > -1 && word.indexOf(brobotName) === -1) reviewers.push(word);
-    else if(word.indexOf('https://github') > -1 && word.indexOf('pull') > -1) pr = word;
+    if (word.indexOf('@') > -1 && word.indexOf(brobotName) === -1) reviewers.push(word);
+    else if (word.indexOf('https://github') > -1 && word.indexOf('pull') > -1) pr = word;
   });
 
   if (pr !== '' && reviewers.length > 0) {
@@ -57,10 +58,10 @@ function ptal(message) {
     });
     text += pr;
     reviews.attachments.forEach(function(att){
-      if(!reviewExists) reviewExists = att.text.indexOf(pr) > -1;
+      if (!reviewExists) reviewExists = att.text.indexOf(pr) > -1;
     });
 
-    if(!reviewExists) {
+    if (!reviewExists) {
       attachment.text = text;
       reviews.attachments.push(JSON.parse(JSON.stringify(attachment)));
 
@@ -68,7 +69,7 @@ function ptal(message) {
         if (err && err.code !== 'ENOENT') throw err;
         var options = { flag : 'w' };
         fs.writeFile('./reviews.json', JSON.stringify(reviews), options, function(err) {
-          if(err) {
+          if (err) {
             return console.log(err);
           }
           console.log('reviews.json overwritten');
@@ -80,8 +81,8 @@ function ptal(message) {
 
 function reviews() {
   var reviews = require('./reviews.json');
-  if(reviews.attachments.length > 0) {
-    return webApi.chat.postMessage(channel, 'Reviews', {attachments: JSON.stringify(reviews.attachments)}, function(err) {
+  if (reviews.attachments.length > 0) {
+    return webApi.chat.postMessage(channel, reviews.text, {attachments: JSON.stringify(reviews.attachments)}, function(err) {
       if (err) {
         console.log('Error:', err);
       }

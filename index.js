@@ -82,7 +82,11 @@ function ptal(message) {
 function reviews() {
   var reviews = require('./reviews.json');
   if (reviews.attachments.length > 0) {
-    return webApi.chat.postMessage(channel, reviews.text, {attachments: JSON.stringify(reviews.attachments)}, function(err) {
+    var interactiveMessage = {
+      username: 'brobot',
+      attachments: JSON.stringify(reviews.attachments),
+    };
+    return webApi.chat.postMessage(channel, reviews.text, interactiveMessage, function(err) {
       if (err) {
         console.log('Error:', err);
       }

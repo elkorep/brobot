@@ -16,7 +16,7 @@ var webApi = new WebClient(config.webapitoken);
 var brobotName = config.brobotName;
 
 rtm.on(CLIENT_EVENTS.RTM.AUTHENTICATED, function(rtmStartData) {
-  console.log('Logged in as ${rtmStartData.self.name} of team ${rtmStartData.team.name}');
+  console.log('Logged in to ' + rtmStartData.team.name + ' as ' + rtmStartData.self.name);
 });
 
 rtm.on(RTM_EVENTS.MESSAGE, function handleRtmMessage(message) {

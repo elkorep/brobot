@@ -27,11 +27,11 @@ rtm.on(RTM_EVENTS.MESSAGE, function handleRtmMessage(message) {
         ptal(message);
       }
       else if (lcMessage.indexOf('reviews') > -1) {
-        reviews();
+        reviews(message);
       }
       else if (lcMessage.indexOf('help') > -1) {
         var help = fs.readFileSync('./help.txt').toString();
-        rtm.sendMessage(help, channel);
+        rtm.sendMessage(help, message.channel);
       }
     }
   }
@@ -78,14 +78,14 @@ function ptal(message) {
   }
 }
 
-function reviews() {
+function reviews(message) {
   var reviews = require('./reviews.json');
   if (reviews.attachments.length > 0) {
     var interactiveMessage = {
       username: 'brobot',
       attachments: JSON.stringify(reviews.attachments),
     };
-    return webApi.chat.postMessage(channel, reviews.text, interactiveMessage, function(err) {
+    return webApi.chat.postMessage(message.channel, reviews.text, interactiveMessage, function(err) {
       if (err) {
         console.log('Error:', err);
       }

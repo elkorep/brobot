@@ -91,7 +91,7 @@ function reviews() {
       }
     });
   }
-  return rtm.sendMessage('No Reviews Found', channel);
+  return rtm.sendMessage('Sorry Bro, No Reviews Found', channel);
 }
 
 rtm.start();

@@ -22,7 +22,7 @@ rtm.on(CLIENT_EVENTS.RTM.AUTHENTICATED, function(rtmStartData) {
 rtm.on(RTM_EVENTS.MESSAGE, function handleRtmMessage(message) {
   if (message.text && message.subtype !== 'bot_message'){
     var lcMessage = message.text.toLowerCase();
-    if (message.text.indexOf(brobotName) > -1 || lcMessage.indexOf('bro') > -1 || lcMessage.indexOf('brobot') > -1) {
+    if (message.text.indexOf(brobotName) > -1 || lcMessage.indexOf('bro') > -1 || lcMessage.indexOf('brobot') > -1 || lcMessage.indexOf('bruh') > -1) {
       if (lcMessage.indexOf('ptal') > -1) {
         ptal(message);
       }
